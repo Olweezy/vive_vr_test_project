@@ -1,14 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using VRTK;
 
 public class RadialOnClick : MonoBehaviour
 {
     public int buttonIndex;
     public List<GameObject> Blocks;
+    VRTK_InteractGrab grabbingController;
+
+    void Start()
+    {
+       
+    }
 
     // Use this for initialization
-    void Start()
+    void onClick()
     {
         buttonIndex = 0;
         AttachBlockToController(buttonIndex);
@@ -19,11 +26,17 @@ public class RadialOnClick : MonoBehaviour
        
 	}
 
-    void AttachBlockToController(int buttonIndex)
+    public void AttachBlockToController(int buttonIndex)
     {
         var selectedBlock = Instantiate(Blocks[buttonIndex]);
+
         Debug.Log("Here is the selected block {0}", selectedBlock);
         selectedBlock.transform.SetParent(GameObject.Find("Controller (left)").transform);
-        Debug.Log("selected block's parent {0}", selectedBlock.transform.parent);
+        selectedBlock.transform.position = selectedBlock.transform.parent.localPosition;
+        grabbingController = selectedBlock.GetComponentInParent<VRTK_InteractGrab>();
+        grabbingController.gameObject.GetComponent<VRTK_InteractTouch>().ForceTouch(selectedBlock);
+        grabbingController.AttemptGrab();
+        
+        Debug.Log(grabbingController.GetGrabbedObject());
     }
 }
