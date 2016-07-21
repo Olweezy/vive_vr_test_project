@@ -21,8 +21,9 @@ public class RadialOnClick : MonoBehaviour
 
     void AttachBlockToController(int buttonIndex)
     {
-        var selectedBlock = Blocks[buttonIndex];
-
+        var selectedBlock = Instantiate(Blocks[buttonIndex]);
+        Debug.Log("Here is the selected block {0}", selectedBlock);
         selectedBlock.transform.SetParent(GameObject.Find("Controller (left)").transform);
+        Debug.Log("selected block's parent {0}", selectedBlock.transform.parent);
     }
 }
