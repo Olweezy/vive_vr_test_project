@@ -8,7 +8,7 @@ public class RadialOnClick : MonoBehaviour
     public List<GameObject> Blocks;
 
     // Use this for initialization
-    public void onClick()
+    void Start()
     {
         buttonIndex = 0;
         AttachBlockToController(buttonIndex);
