@@ -5,7 +5,7 @@ using VRTK;
 
 public class RadialOnClick : MonoBehaviour
 {
-    public int buttonIndex;
+    private int buttonIndex;
     public List<GameObject> Blocks;
     VRTK_InteractGrab grabbingController;
 
@@ -17,7 +17,6 @@ public class RadialOnClick : MonoBehaviour
     // Use this for initialization
     void onClick()
     {
-        buttonIndex = 0;
         AttachBlockToController(buttonIndex);
     }
 
@@ -28,15 +27,16 @@ public class RadialOnClick : MonoBehaviour
 
     public void AttachBlockToController(int buttonIndex)
     {
-        var selectedBlock = Instantiate(Blocks[buttonIndex]);
+        grabbingController = GameObject.Find("Controller (left)").GetComponent<VRTK_InteractGrab>();
+        //Check if already holding an object before instantiating a new one
+        if (grabbingController.GetGrabbedObject() == null)
+        {
+            var selectedBlock = Instantiate(Blocks[buttonIndex]);
 
-        Debug.Log("Here is the selected block {0}", selectedBlock);
-        selectedBlock.transform.SetParent(GameObject.Find("Controller (left)").transform);
-        selectedBlock.transform.position = selectedBlock.transform.parent.localPosition;
-        grabbingController = selectedBlock.GetComponentInParent<VRTK_InteractGrab>();
-        grabbingController.gameObject.GetComponent<VRTK_InteractTouch>().ForceTouch(selectedBlock);
-        grabbingController.AttemptGrab();
-        
-        Debug.Log(grabbingController.GetGrabbedObject());
+            //Find the left controller and force it to touch the instantiated object
+            grabbingController.gameObject.GetComponent<VRTK_InteractTouch>().ForceTouch(selectedBlock);
+            //Grab touched object
+            grabbingController.AttemptGrab();
+        }
     }
 }
